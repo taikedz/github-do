@@ -4,25 +4,39 @@ set -euo pipefail
 
 ### Control github Usage:help
 #
-#Batch operations
+### Batch operations
+#
+#Create repositories:
 #
 #    github-do create OWNER REPOS ...
 #
+#Transfer repositories to another user/organisation:
+#
 #    github-do reown OWNER NEWOWNER REPOS ...
+#
+#Delete repositories:
 #
 #    github-do delete OWNER REPOS ...
 #
+#Rename by substitution:
+#
 #    github-do srename OWNER SUBSTITUTION REPOS ...
 #
-#Single-repo operations
+#    # e.g. github-do myuser "s/^/old-/" project1 project2 project3
+#    # Renames github.com/myuser/project1 to github.com/myuser/old-project1 ,
+#    #   and same for other projects listed
+#
+### Single-repo operations
+#
+#Simply rename a project literally
 #
 #    github-do rename OWNER REPO NEWREPO
 #
-#    github-do branch create OWNER REPO BRANCHNAME
+#Delete a branch from a repo
 #
 #    github-do branch delete OWNER REPO BRANCHNAME
 #
-#    github-do tag create OWNER REPO TAGNAME
+#Delete a tag on a repo remotely
 #
 #    github-do tag delete OWNER REPO TAGNAME
 #
@@ -624,17 +638,6 @@ gh:repo:delete() {
     done
 }
 
-gh:refs:create() {
-    local owner repo branch ref
-    ref="${1:-}" ; shift || out:fail "No ref specified"
-    owner="${1:-}" ; shift || out:fail "No owner specified"
-    repo="${1:-}" ; shift || out:fail "No repo specified"
-    branch="${1:-}" ; shift || out:fail "No branch specified"
-
-    gh:curl "https://api.github.com/repos/$owner/$repo/git/refs/$ref/$branch" \
-        | jq .html_url
-}
-
 gh:refs:delete() {
     local owner repo branch ref
     ref="${1:-}" ; shift || out:fail "No ref specified"
@@ -648,19 +651,11 @@ gh:refs:delete() {
 
 # ====
 
-gh:branch:create() {
-    gh:refs:create heads "$@"
-}
-
 gh:branch:delete() {
     gh:refs:delete heads "$@"
 }
 
 # ====
-
-gh:tag:create() {
-    gh:refs:create tags "$@"
-}
 
 gh:tag:delete() {
     gh:refs:delete tags "$@"
@@ -716,7 +711,7 @@ gh:main() {
     branch|tag)
         local subaction="${1:-}"; shift || out:fail "No sub-action for '$action' specified"
         case "$subaction" in
-        create|delete)
+        delete)
             "gh:$action:$subaction" "$@"
             ;;
         *)
