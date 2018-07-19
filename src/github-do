@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+### Control github Usage:help
+#
+#Batch operations
+#
+#    github-do create OWNER REPOS ...
+#
+#    github-do reown OWNER NEWOWNER REPOS ...
+#
+#    github-do delete OWNER REPOS ...
+#
+#    github-do srename OWNER SUBSTITUTION REPOS ...
+#
+#Single-repo operations
+#
+#    github-do rename OWNER REPO NEWREPO
+#
+#    github-do branch create OWNER REPO BRANCHNAME
+#
+#    github-do branch delete OWNER REPO BRANCHNAME
+#
+#    github-do tag create OWNER REPO TAGNAME
+#
+#    github-do tag delete OWNER REPO TAGNAME
+#
+###/doc
+
+#%include autohelp.sh out.sh askuser.sh bincheck.sh
+
+#%include repo.sh refs.sh runmain.sh
+
+gh:main() {
+    autohelp:check "$@"
+
+    gh:jqcheck
+
+    local action="${1:-}"; shift || out:fail "No action specified"
+
+    case "$action" in
+    rename|reown|delete|create|srename)
+        gh:getcreds
+        gh:repo:"$action" "$@"
+        ;;
+    branch|tag)
+        local subaction="${1:-}"; shift || out:fail "No sub-action for '$action' specified"
+        case "$subaction" in
+        create|delete)
+            "gh:$action:$subaction" "$@"
+            ;;
+        *)
+            out:fail "Unknown sub-action '$subaction'"
+            ;;
+        esac
+        ;;
+    *)
+        out:fail "Unknown action '$action'"
+        ;;
+    esac
+}
+
+gh:getcreds() {
+    [[ -n "${GHUSER:-}" ]] || GHUSER="$(askuser:ask "Github user name")"
+    [[ -n "${GHTOKEN:-}" ]] || GHTOKEN="$(askuser:password "Github Personal Access Token"; echo >&2)"
+    export GHUSER GHTOKEN
+}
+
+gh:jqcheck() {
+    if ! bincheck:has jq ; then
+        # Poor man's filter ; never errors.
+        jq() {
+            grep "$1" || :
+        }
+    fi
+}
+
+runmain github-do gh:main "$@"
