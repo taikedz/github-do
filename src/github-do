@@ -42,7 +42,7 @@ set -euo pipefail
 #
 ###/doc
 
-#%include autohelp.sh out.sh askuser.sh bincheck.sh
+#%include autohelp.sh out.sh bincheck.sh
 
 #%include repo.sh refs.sh runmain.sh
 
@@ -55,7 +55,6 @@ gh:main() {
 
     case "$action" in
     rename|reown|delete|create|srename)
-        gh:getcreds
         gh:repo:"$action" "$@"
         ;;
     branch|tag)
@@ -73,12 +72,6 @@ gh:main() {
         out:fail "Unknown action '$action'"
         ;;
     esac
-}
-
-gh:getcreds() {
-    [[ -n "${GHUSER:-}" ]] || GHUSER="$(askuser:ask "Github user name")"
-    [[ -n "${GHTOKEN:-}" ]] || GHTOKEN="$(askuser:password "Github Personal Access Token"; echo >&2)"
-    export GHUSER GHTOKEN
 }
 
 gh:jqcheck() {
