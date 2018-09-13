@@ -1,7 +1,7 @@
 github-do
 ===
 
-Basic command line operations to control github repositories.
+Basic command line operations to control github repositories. You do not need to have any repositories cloned locally.
 
 Written during a cleanup session...
 
@@ -27,13 +27,13 @@ Rename by substitution:
 
     github-do srename OWNER SUBSTITUTION REPOS ...
 
-    # e.g. github-do myuser "s/^/old-/" project1 project2 project3
+    # e.g. github-do srename myuser "s/^/old-/" project1 project2 project3
     # Renames github.com/myuser/project1 to github.com/myuser/old-project1 ,
     #   and same for other projects listed
 
 ## Single-repo operations
 
-Simply rename a project literally
+Simply rename a project
 
     github-do rename OWNER REPO NEWREPO
 
@@ -45,4 +45,8 @@ Delete a tag on a repo remotely
 
     github-do tag delete OWNER REPO TAGNAME
 
+## Extending and "Compiling" `github-do`
 
+`github-do` uses [bash-builder](https://github.com/taikedz/bash-builder/) and its associated [libs](https://github.com/taikedz/bash-libs/) to intelligently concatenate the shell sources.
+
+You can write additional functions using [The Github API](https://developer.github.com/v3/) (v3 linked)
