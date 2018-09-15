@@ -52,6 +52,7 @@ gh:main() {
     gh:jqcheck
 
     local action="${1:-}"; shift || out:fail "No action specified"
+    gh:getcreds
 
     case "$action" in
     rename|reown|delete|create|srename)
