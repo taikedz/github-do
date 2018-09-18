@@ -2,7 +2,7 @@
 
 gh:curl() {
     gh:getcreds
-    ( set -x
+    ( # set -x
     curl -s -S -u "$GHUSER:$GHTOKEN" "$@"
     )
 }

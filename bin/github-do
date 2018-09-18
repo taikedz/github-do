@@ -42,7 +42,7 @@ set -euo pipefail
 #
 ###/doc
 
-##bash-libs: autohelp.sh @ 715e710d (after 1.1.4)
+##bash-libs: autohelp.sh @ f6496eca (1.1.4)
 
 ### autohelp:print [ SECTION [FILE] ] Usage:bbuild
 # Write your help as documentation comments in your script
@@ -153,9 +153,9 @@ autohelp:check() {
         exit 0
     fi
 }
-##bash-libs: out.sh @ 715e710d (after 1.1.4)
+##bash-libs: out.sh @ f6496eca (1.1.4)
 
-##bash-libs: colours.sh @ 715e710d (after 1.1.4)
+##bash-libs: colours.sh @ f6496eca (1.1.4)
 
 ### Colours for bash Usage:bbuild
 # A series of colour flags for use in outputs.
@@ -185,7 +185,7 @@ autohelp:check() {
 #
 ###/doc
 
-##bash-libs: tty.sh @ 715e710d (after 1.1.4)
+##bash-libs: tty.sh @ f6496eca (1.1.4)
 
 tty:is_ssh() {
     [[ -n "$SSH_TTY" ]] || [[ -n "$SSH_CLIENT" ]] || [[ "$SSH_CONNECTION" ]]
@@ -364,7 +364,7 @@ function out:fail {
 function out:error {
     echo "${CBRED}ERROR: ${CRED}$*$CDEF" 1>&2
 }
-##bash-libs: bincheck.sh @ 715e710d (after 1.1.4)
+##bash-libs: bincheck.sh @ f6496eca (1.1.4)
 
 ### bincheck:get COMMANDS ... Usage:bbuild
 #
@@ -438,7 +438,7 @@ bincheck:path() {
 }
 
 
-##bash-libs: askuser.sh @ 715e710d (after 1.1.4)
+##bash-libs: askuser.sh @ f6496eca (1.1.4)
 
 ### askuser Usage:bbuild
 # Present the user with questions on stderr
@@ -566,7 +566,7 @@ function askuser:choose {
 
 gh:curl() {
     gh:getcreds
-    ( set -x
+    ( # set -x
     curl -s -S -u "$GHUSER:$GHTOKEN" "$@"
     )
 }
@@ -668,7 +668,7 @@ gh:branch:delete() {
 gh:tag:delete() {
     gh:refs:delete tags "$@"
 }
-##bash-libs: runmain.sh @ 715e710d (after 1.1.4)
+##bash-libs: runmain.sh @ f6496eca (1.1.4)
 
 ### runmain SCRIPTNAME FUNCTION [ARGUMENTS ...] Usage:bbuild
 #
